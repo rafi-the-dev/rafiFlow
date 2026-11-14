@@ -1,0 +1,14 @@
+[workspace]
+members = ["crates/core", "crates/desktop", "crates/ui"]
+default-members = ["crates/core", "crates/desktop"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.90"
+license = "MIT"
+
+[profile.dev]
+debug = 0
+incremental = false
