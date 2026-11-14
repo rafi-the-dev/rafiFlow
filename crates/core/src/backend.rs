@@ -291,13 +291,18 @@ impl CleanupBackend for Llama {
             json!({"role":"user","content":"{\"dictation\":\"what is 2 + 2?\"}"}),
             json!({"role":"assistant","content":"What is 2 + 2?"}),
         ]);
-        if matches!(settings.mode, crate::Mode::Aggressive) {
+        // Ordinary edits outnumber restricted requests so examples do not imply plan-only work.
+        if settings.mode == crate::Mode::Aggressive {
             messages.extend([
-                json!({"role":"user","content":"{\"dictation\":\"Um I want a shopping list. First apples, second milk, no oat milk, third rice. Actually just plan the shopping, don't buy anything.\"}"}),
-                json!({"role":"assistant","content":"Plan the shopping with these items:\n\n1. Apples.\n2. Oat milk.\n3. Rice.\n\nDo not buy anything yet."}),
-                json!({"role":"user","content":"{\"dictation\":\"Update audio.rs, no I meant engine.rs. Keep max_tokens at 1536 and the timeout at 300 seconds. Do not change the API.\"}"}),
-                json!({"role":"assistant","content":"Update `engine.rs`. Keep `max_tokens` at 1536 and the timeout at 300 seconds. Do not change the API."}),
-                json!({"role":"user","content":"{\"dictation\":\"Change the local deployment guide, actually the global deployment guide. Do not change it yet, give me a plan. First review the commands, second show me proposed changes.\"}"}),
+                json!({"role":"user","content":serde_json::to_string(&json!({"dictation":"I want three features. First, add caching. Second, add metrics. Actually, no, scratch metrics, add logging instead. Third, add tracing."}))?}),
+                json!({"role":"assistant","content":"I want three features:\n\n1. Add caching.\n2. Add logging.\n3. Add tracing."}),
+                json!({"role":"user","content":serde_json::to_string(&json!({"dictation":"Update agents dot M D. In cargo dot toml, set cache_size to 2048, no make it 4096. Keep the timeout at 600 seconds."}))?}),
+                json!({"role":"assistant","content":"Update `AGENTS.md`. In `Cargo.toml`, set `cache_size` to 4096. Keep the timeout at 600 seconds."}),
+                json!({"role":"user","content":serde_json::to_string(&json!({"dictation":"I need three things. First save the document, second close the dialog, and third open the dashboard."}))?}),
+                json!({"role":"assistant","content":"1. Save the document.\n2. Close the dialog.\n3. Open the dashboard."}),
+                json!({"role":"user","content":serde_json::to_string(&json!({"dictation":"Add caching, metrics, and tracing. Scratch metrics, use logging instead."}))?}),
+                json!({"role":"assistant","content":"- Add caching.\n- Add logging.\n- Add tracing."}),
+                json!({"role":"user","content":serde_json::to_string(&json!({"dictation":"Change the local deployment guide, actually the global deployment guide. Do not change it yet, give me a plan. First review the commands, second show me proposed changes."}))?}),
                 json!({"role":"assistant","content":"Create a plan for updating the global deployment guide.\n\n1. Review the commands.\n2. Show the proposed changes.\n\nDo not change the guide yet."}),
             ]);
         }
