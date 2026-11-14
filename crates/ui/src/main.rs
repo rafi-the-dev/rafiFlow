@@ -132,6 +132,13 @@ fn settings(props: &SettingsProps) -> Html {
 fn app() -> Html {
     let snapshot = use_state(|| json!({}));
     let error = use_state(String::new);
+    let dark = use_state(|| {
+        web_sys::window()
+            .and_then(|window| window.local_storage().ok().flatten())
+            .and_then(|storage| storage.get_item("rafiflow.appearance").ok().flatten())
+            .as_deref()
+            != Some("light")
+    });
     let page = use_state(|| "history".to_string());
     let search = use_state(String::new);
     let test_text = use_state(String::new);
@@ -176,6 +183,24 @@ fn app() -> Html {
             </div><span>{s(status,"message")}</span>
         </div></div>};
     }
+    let toggle_theme = {
+        let dark = dark.clone();
+        let error = error.clone();
+        Callback::from(move |_| {
+            let next = !*dark;
+            dark.set(next);
+            let saved = web_sys::window()
+                .and_then(|window| window.local_storage().ok().flatten())
+                .is_some_and(|storage| {
+                    storage
+                        .set_item("rafiflow.appearance", if next { "dark" } else { "light" })
+                        .is_ok()
+                });
+            if !saved {
+                error.set("Appearance changed, but it couldn't be saved for next time.".into());
+            }
+        })
+    };
     let nav = |name: &'static str| {
         let page = page.clone();
         Callback::from(move |_| page.set(name.into()))
@@ -221,7 +246,7 @@ fn app() -> Html {
             }
         })
     };
-    html! { <div class="app">
+    html! { <div class={classes!("app", (!*dark).then_some("light"))}>
         <aside>
             <div class="brand"><span class="brand-mark">{"〰"}</span><strong>{"rafiFlow"}</strong></div>
             <p class="tagline">{"Think aloud. Write clearly."}</p>
@@ -233,7 +258,11 @@ fn app() -> Html {
             <div class="privacy"><span class="status-dot"/>{"Fully local"}<p>{"No account. No uploads."}</p></div>
         </aside>
         <main>
-            <header><div><h1>{match page.as_str() {"settings"=>"Your flow", "cleanup"=>"From thought to text", _=>"Your words, collected"}}</h1><p class="muted">{"English dictation, entirely on your machine."}</p></div></header>
+            <header><div><h1>{match page.as_str() {"settings"=>"Your flow", "cleanup"=>"From thought to text", _=>"Your words, collected"}}</h1><p class="muted">{"English dictation, entirely on your machine."}</p></div>
+            <button class="theme-toggle" type="button" onclick={toggle_theme}
+                aria-label={if *dark {"Switch to light mode"} else {"Switch to dark mode"}}>
+                {if *dark {"Light mode"} else {"Dark mode"}}
+            </button></header>
             <div class={classes!("status", (phase=="error").then_some("error"))} role="status">
                 <span class={classes!("status-dot", (phase=="recording").then_some("pulse"))}/>
                 <div><strong>{if matches!(phase,"transcribing" | "cleaning") {"Recording finished"} else {s(status,"message")}}</strong><small>{if status["models_loaded"]==true {"Models warm · unload after five idle minutes"} else {"Models load on first use"}}</small></div>
