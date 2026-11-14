@@ -193,5 +193,36 @@
       "first"
     ],
     "expected_example": "Fix the player movement and create a pull request."
+  },
+  {
+    "id": "context-before-new-topic-list",
+    "input": "Okay, so I worked on it a little. It's called Graphy Flow, it's getting very good. I've ran some tests. How about I'll give you a good test now? I will say I use Linux because first it is faster, second, it's more customizable. Third, it's free and open source. Fourth, it has way less bloat. Fifth, it's a lot more stable.",
+    "required": [
+      "worked",
+      "Graphy Flow",
+      "good",
+      "tests",
+      "test now",
+      "Linux",
+      "1.",
+      "2.",
+      "3.",
+      "4.",
+      "5.",
+      "faster",
+      "customizable",
+      "free",
+      "open source",
+      "bloat",
+      "stable",
+      "?",
+      "\n\n"
+    ],
+    "forbidden": [
+      "do not",
+      "please",
+      "scratch"
+    ],
+    "expected_example": "I worked on it a little. It's called Graphy Flow, and it's getting very good. I've run some tests. How about I give you a good test now?\n\nI use Linux because:\n\n1. It's faster.\n2. It's more customizable.\n3. It's free and open source.\n4. It has way less bloat.\n5. It's a lot more stable."
   }
 ]
