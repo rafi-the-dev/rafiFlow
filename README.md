@@ -48,7 +48,7 @@ The in-app Record button is useful for testing. Use the global shortcut with the
 - Raw bypasses Qwen entirely.
 - Light fixes grammar, punctuation, and filler.
 - Standard also resolves corrections and repetition.
-- Aggressive is the default: moderate rewriting that preserves conversational tone and spoken politeness, applies corrections in place, and formats paragraphs and Markdown lists. It should retain explicit restrictions without inventing new ones.
+- Aggressive is the default: moderate rewriting that preserves meaning and spoken politeness, applies corrections in place, and formats paragraphs and Markdown lists. It should retain explicit restrictions without inventing new ones.
 - Custom uses your own editing instructions.
 
 Every AI cleanup mode uses a built-in editing system prompt. Dictated questions stay questions, and dictated requests are edited rather than answered or executed. Custom instructions change editing style within that role. Use Cleanup studio to compare results under different settings. Vocabulary hints guide cleanup, but do not fine-tune ASR or guarantee spelling. Model output can still make mistakes; compare the original transcript in history.
