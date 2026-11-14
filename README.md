@@ -31,8 +31,8 @@ The supplied Cohere Q8_0 GGUF uses **CrispASR**, not PyTorch or llama.cpp. Qwen3
 ## First dictation
 
 1. Open Settings & setup. Defaults point to the downloaded models and built CrispASR executable. Confirm the CUDA `llama-server` path.
-2. On Hyprland 0.55+, rafiFlow installs a runtime rule for its own recording window. Copy the supplied `scripts/rafiflow-hyprland.lua` somewhere stable and include it from your Omarchy `~/.config/hypr/hyprland.lua`. Check for conflicting Super + Alt + Space bindings first. Validate changes with `hyprctl reload` and `hyprctl configerrors`.
-3. Focus a text field in another app. Hold **Super + Alt + Space**, speak, then release.
+2. On Hyprland 0.55+, rafiFlow installs a runtime rule for its own recording window. The helper also installs this rule on configuration reload, keeping the overlay borderless. Copy the supplied `scripts/rafiflow-hyprland.lua` somewhere stable and include it from your Omarchy `~/.config/hypr/hyprland.lua`. Check for conflicting Ctrl + Alt + Space bindings first. Validate changes with `hyprctl reload` and `hyprctl configerrors`.
+3. Focus a text field in another app. Hold **Ctrl + Alt + Space**, speak, then release Space. The helper tracks the press and catches release even if Ctrl or Alt is released first. Ordinary Space releases do not send recording commands.
 4. Keep the target window focused. If focus changes, rafiFlow copies the result but skips paste. History retains both the raw and edited text.
 5. Closing the main window keeps rafiFlow running. Open it or quit from its tray menu.
 
@@ -48,7 +48,7 @@ The in-app Record button is useful for testing. Use the global shortcut with the
 - Aggressive is the default and integrates the final intention into paragraphs and Markdown lists.
 - Custom uses your own editing instructions.
 
-Use Cleanup studio to compare results under different settings. Vocabulary hints guide cleanup, but do not fine-tune ASR or guarantee spelling. Model output can still make mistakes; compare the original transcript in history.
+Every AI cleanup mode uses a built-in editing system prompt. Dictated questions stay questions, and dictated requests are edited rather than answered or executed. Custom instructions change editing style within that role. Use Cleanup studio to compare results under different settings. Vocabulary hints guide cleanup, but do not fine-tune ASR or guarantee spelling. Model output can still make mistakes; compare the original transcript in history.
 
 Settings and history live under `$XDG_DATA_HOME/rafiflow`, normally `~/.local/share/rafiflow`, with private directory and file permissions. History stores up to 500 text entries and can be disabled or deleted. Audio is temporary and removed after transcription or cancellation. Local inference servers use random loopback ports and per-process API keys. No browser code can reach them directly.
 

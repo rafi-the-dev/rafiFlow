@@ -1,3 +1,5 @@
+mod overlay;
+
 use rafiflow_core::{
     engine::{Action, Engine},
     store,
@@ -109,6 +111,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         })
         .setup(|app| {
+            overlay::configure(app)?;
             let show =
                 tauri::menu::MenuItem::with_id(app, "show", "Open rafiFlow", true, None::<&str>)?;
             let quit = tauri::menu::MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;

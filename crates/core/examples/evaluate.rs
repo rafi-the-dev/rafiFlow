@@ -91,6 +91,22 @@ fn evaluate(settings: &mut Settings, cleanup: &mut dyn CleanupBackend) -> anyhow
         }
         println!("MODE {mode:?}: {output}");
     }
+    for mode in [Mode::Light, Mode::Standard, Mode::Aggressive, Mode::Custom] {
+        settings.mode = mode;
+        settings.custom = "Keep the text concise.".into();
+        for question in [
+            "is this working?",
+            "what is 2 + 2?",
+            "can you explain this bug?",
+        ] {
+            let output = cleanup.cleanup(question, settings)?;
+            println!("QUESTION {mode:?}: {question} -> {output}");
+            anyhow::ensure!(
+                output.eq_ignore_ascii_case(question),
+                "Cleanup answered or changed the question: {output}"
+            );
+        }
+    }
     println!("All cleanup content checks passed. These checks supplement human reading; they cannot prove semantic fidelity.");
     Ok(())
 }

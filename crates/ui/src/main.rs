@@ -123,7 +123,7 @@ fn settings(props: &SettingsProps) -> Html {
         <label class="check"><input type="checkbox" checked={draft["keep_history"].as_bool().unwrap_or(true)} onchange={toggle("keep_history")}/>{"Save dictation history locally (up to 500 entries)"}</label>
         <button class="primary" onclick={save}>{"Save settings"}</button>
         <h3>{"Push to talk on Hyprland"}</h3>
-        <p>{"Start rafiFlow, then add the press and release bindings from the README. The default example uses Super + Alt + Space. Keep the receiving app focused while speaking."}</p>
+        <p>{"Start rafiFlow, then add the press and release bindings from the README. The default example uses Ctrl + Alt + Space. Keep the receiving app focused while speaking."}</p>
         <p class="hint">{"Your existing desktop configuration is never changed automatically."}</p>
     </section> }
 }
