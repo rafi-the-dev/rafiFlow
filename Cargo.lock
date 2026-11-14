@@ -3008,6 +3008,7 @@ name = "rafiflow"
 version = "0.1.0"
 dependencies = [
  "fs2",
+ "gtk",
  "rafiflow-core",
  "serde_json",
  "tauri",

@@ -245,7 +245,7 @@ pub fn configure_overlay() -> Result<()> {
     if minor < 55 {
         return Ok(());
     }
-    let rule = r#"hl.window_rule({name="rafiflow-overlay",match={class="^rafiflow$",title="^rafiFlow recording$"},float=true,no_focus=true,border_size=0,min_size={340,90},max_size={340,90},size={340,90},move={"(monitor_w-window_w)/2","(monitor_h-window_h-60)"}})"#;
+    let rule = r#"hl.window_rule({name="rafiflow-overlay",enabled=true,match={class="^rafiflow$",title="^rafiFlow recording$"},float=true,no_focus=true,border_size=0,decorate=false,no_shadow=true,no_blur=true,rounding=0,min_size={340,90},max_size={340,90},size={340,90},move={"(monitor_w-window_w)/2","(monitor_h-window_h-60)"}})"#;
     let output = Command::new("hyprctl").args(["eval", rule]).output()?;
     if !output.status.success() {
         bail!(

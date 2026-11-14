@@ -284,6 +284,13 @@ impl CleanupBackend for Llama {
         let mut messages = vec![
             json!({"role": "system", "content": cleanup_prompt(settings.mode, &settings.custom, &settings.vocabulary)}),
         ];
+        // Even short questions are dictated text, not requests to the assistant.
+        messages.extend([
+            json!({"role":"user","content":"{\"dictation\":\"is this working?\"}"}),
+            json!({"role":"assistant","content":"Is this working?"}),
+            json!({"role":"user","content":"{\"dictation\":\"what is 2 + 2?\"}"}),
+            json!({"role":"assistant","content":"What is 2 + 2?"}),
+        ]);
         if matches!(settings.mode, crate::Mode::Aggressive) {
             messages.extend([
                 json!({"role":"user","content":"{\"dictation\":\"Um I want a shopping list. First apples, second milk, no oat milk, third rice. Actually just plan the shopping, don't buy anything.\"}"}),
