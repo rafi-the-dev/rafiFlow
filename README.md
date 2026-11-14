@@ -43,6 +43,8 @@ For Hyprland versions using `.conf` configuration, use compositor press/release 
 
 The in-app Record button is useful for testing. Use the global shortcut with the receiving app focused for normal dictation. Clipboard copying replaces the current clipboard and does not restore it.
 
+Use the header **Light mode / Dark mode** button to change appearance. Dark mode is the default, and your choice is remembered on this device without changing model settings.
+
 ## Editing and privacy
 
 - Raw bypasses Qwen entirely.
