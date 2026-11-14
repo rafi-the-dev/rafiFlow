@@ -48,7 +48,7 @@ The in-app Record button is useful for testing. Use the global shortcut with the
 - Raw bypasses Qwen entirely.
 - Light fixes grammar, punctuation, and filler.
 - Standard also resolves corrections and repetition.
-- Aggressive is the default and integrates the final intention into paragraphs and Markdown lists.
+- Aggressive is the default: moderate rewriting that preserves conversational tone and spoken politeness, applies corrections in place, and formats paragraphs and Markdown lists. It should retain explicit restrictions without inventing new ones.
 - Custom uses your own editing instructions.
 
 Every AI cleanup mode uses a built-in editing system prompt. Dictated questions stay questions, and dictated requests are edited rather than answered or executed. Custom instructions change editing style within that role. Use Cleanup studio to compare results under different settings. Vocabulary hints guide cleanup, but do not fine-tune ASR or guarantee spelling. Model output can still make mistakes; compare the original transcript in history.
@@ -60,6 +60,8 @@ Both model processes stay loaded for five idle minutes after the last job, then 
 ## Memory and limits
 
 Qwen defaults to **24 GPU layers**, with remaining layers on CPU, a 4096-token context, and small batches. This leaves more room for Cohere and the desktop on an 8 GB GPU. Adjust in Settings based on measured usage. No silent model substitution or automatic quantization occurs. CUDA allocation errors are surfaced, and cleanup failure retains the raw transcript without pasting it.
+
+ASR is forced to English (`-l en` and `language=en`). The selected Cohere model is multilingual: an English decoding tag is not a reliable spoken-language detector. Arabic or other non-English speech may still produce text, including English guesses or transliterations. Strictly rejecting such audio is not implemented; no model has been replaced or added.
 
 Recordings are limited to 90 seconds and discarded if that limit is exceeded. An RMS gate and the classical WebRTC voice-activity detector reject quiet or non-speech recordings without adding another model. Noise or music can still cause ASR hallucinations. Long transcripts or custom prompts can exceed the cleanup context; truncated output is rejected rather than pasted.
 
@@ -73,9 +75,12 @@ NO_COLOR=true trunk build
 cargo build -p rafiflow
 cargo clippy --workspace --all-targets -- -D warnings
 cargo run -p rafiflow-core --example evaluate
+cargo run -p rafiflow-core --example cleanup_regressions -- /tmp/cleanup-report.json
 cargo run -p rafiflow-core --example evaluate -- /path/to/mono-16khz-s16.wav
 ```
 
 Stop rafiFlow or wait for its models to unload before running the GPU evaluator, to avoid loading duplicate copies on an 8 GB GPU.
+
+The cleanup regression evaluator uses the ten exact user-supplied raw dictations with a fresh Qwen server per case, bypassing ASR and isolating prompt caches. It writes every output and content-check failure to JSON, then fails if any check failed. Inspect the outputs too: token assertions cannot establish semantic fidelity.
 
 The evaluator invokes real local models, logs the raw and cleaned results, and checks correction, formatting, and technical constraints. It never copies or pastes. See the technical reference in AGENTS.md for verified outcomes and remaining limitations.

@@ -29,7 +29,14 @@ pub fn cleanup_prompt(mode: Mode, custom: &str, vocabulary: &str) -> String {
         Mode::Raw => "",
         Mode::Light => "Fix punctuation, grammar, and filler words. Keep the original wording and order.",
         Mode::Standard => "Remove filler, repetition, abandoned thoughts, and resolve self-corrections in place.",
-        Mode::Aggressive => "Rewrite for clarity as if the speaker knew their final intention from the beginning. Integrate self-corrections into the original request. Later corrections override abandoned earlier choices. Structure paragraphs, numbered lists, bullet points, and Markdown when useful. Preserve prohibitions such as 'do not modify anything yet'.",
+        Mode::Aggressive => "Edit naturally with moderate rewriting:
+- Keep the speaker's conversational tone and point of view. Preserve 'please' if spoken; do not add it otherwise.
+- Remove filler, hesitation, repetition, and unnecessary qualifiers.
+- Apply corrections silently. 'Scratch that' replaces the preceding instruction. 'Scratch X, use Y instead' replaces only X in its original position; keep all unrelated instructions.
+- Write only the final intended request. Do not mention abandoned choices or leave 'scratch', 'actually', or 'instead' correction sentences behind.
+- Never add instructions, restrictions, negations, requirements, or a plan-only condition. Keep restrictions only when spoken.
+- When the speaker enumerates first, second, third, format a NUMBERED Markdown list (1., 2., 3.). Otherwise use bullet lists for parallel tasks and paragraphs when useful.
+- Spell dictated filenames conventionally: AGENTS.md, Cargo.toml, main.rs. Copy explicit identifiers and numbers exactly, without changing or inserting characters.",
         Mode::Custom => custom,
     };
     format!("{DEFAULT_CLEANUP_SYSTEM_PROMPT}\nEditing style: {instruction}\nVocabulary hints (use only when supported by the dictation): {vocabulary}")
@@ -45,7 +52,7 @@ mod tests {
             assert!(prompt.contains("Never invent requirements"));
             assert!(prompt.contains("AGENTS.md"));
         }
-        assert!(cleanup_prompt(Mode::Aggressive, "", "").contains("Later corrections override"));
+        assert!(cleanup_prompt(Mode::Aggressive, "", "").contains("Apply corrections silently"));
         assert!(cleanup_prompt(Mode::Custom, "Use compact lists", "").contains("Use compact lists"));
     }
 }

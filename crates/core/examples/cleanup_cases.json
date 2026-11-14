@@ -1,0 +1,197 @@
+[
+  {
+    "id": "numbered-list",
+    "input": "Okay, I need three things done. First, fix the player movement. Second, add jumping. And third, make the camera follow the player smoothly.",
+    "required": [
+      "1.",
+      "2.",
+      "3.",
+      "movement",
+      "jump",
+      "camera",
+      "smooth"
+    ],
+    "forbidden": [
+      "do not",
+      "don't",
+      "plan",
+      "please"
+    ],
+    "expected_example": "1. Fix the player movement.\n2. Add jumping.\n3. Make the camera follow the player smoothly."
+  },
+  {
+    "id": "replace-second-feature",
+    "input": "So, um, I want four features. First, add shadows. Second, add reflections. Actually, no, scratch reflections, add ambient occlusion instead. Third, add better lighting. And fourth, add a debug overlay.",
+    "required": [
+      "1.",
+      "2.",
+      "3.",
+      "4.",
+      "shadow",
+      "ambient occlusion",
+      "lighting",
+      "a debug overlay"
+    ],
+    "forbidden": [
+      "reflection",
+      "scratch",
+      "actually",
+      "do not",
+      "don't",
+      "please",
+      "instead"
+    ],
+    "expected_example": "I want four features:\n\n1. Add shadows.\n2. Add ambient occlusion.\n3. Add better lighting.\n4. Add a debug overlay."
+  },
+  {
+    "id": "bullet-list",
+    "input": "Okay, so for the app I want it to start automatically, and, uh, I want it to minimize to the tray. Also it should remember my settings, and it needs to work without internet, and I don't want notifications popping up all the time.",
+    "required": [
+      "- ",
+      "automatically",
+      "tray",
+      "settings",
+      "notifications"
+    ],
+    "forbidden": [
+      "please",
+      "do not modify",
+      "plan first"
+    ],
+    "expected_example": "The app should:\n\n- Start automatically.\n- Minimize to the tray.\n- Remember user settings.\n- Function without internet.\n- Avoid frequent notifications."
+  },
+  {
+    "id": "filenames-no-invented-restriction",
+    "input": "I need you to update three files, agents dot M D, cargo dot toml, and main dot R S. In the agents file, update the build instructions. In cargo, add the dependency. And in main, initialize the new system.",
+    "required": [
+      "AGENTS.md",
+      "Cargo.toml",
+      "main.rs",
+      "build instructions",
+      "dependency",
+      "initialize",
+      "system"
+    ],
+    "forbidden": [
+      "do not",
+      "don't",
+      "not modify",
+      "yet",
+      "plan",
+      "please"
+    ],
+    "expected_example": "Update the following files:\n\n- `AGENTS.md`: Update the build instructions.\n- `Cargo.toml`: Add the dependency.\n- `main.rs`: Initialize the new system."
+  },
+  {
+    "id": "final-plan-only-intention",
+    "input": "Okay, make a plan to add multiplayer, matchmaking, and dedicated servers. Actually wait, forget multiplayer entirely. I only want single-player AI bots, better enemy pathfinding, and a difficulty setting. Don't implement anything yet.",
+    "required": [
+      "plan",
+      "single-player",
+      "bots",
+      "pathfinding",
+      "difficulty",
+      "implement",
+      "yet"
+    ],
+    "forbidden": [
+      "multiplayer",
+      "matchmaking",
+      "dedicated",
+      "scratch",
+      "please"
+    ],
+    "required_any": [
+      "do not implement",
+      "don't implement"
+    ],
+    "expected_example": "Make a plan to add single-player AI bots with improved enemy pathfinding and difficulty setting.\n\nDo not implement anything yet."
+  },
+  {
+    "id": "keep-please",
+    "input": "Please fix the collision system and add some tests.",
+    "required": [
+      "Please",
+      "collision system",
+      "tests"
+    ],
+    "forbidden": [
+      "do not",
+      "don't",
+      "plan",
+      "yet"
+    ],
+    "expected_example": "Please fix the collision system and add tests."
+  },
+  {
+    "id": "do-not-add-please",
+    "input": "Fix the collision system and add tests.",
+    "required": [
+      "collision system",
+      "tests"
+    ],
+    "forbidden": [
+      "please",
+      "do not",
+      "don't",
+      "plan",
+      "yet"
+    ],
+    "expected_example": "Fix the collision system and add tests."
+  },
+  {
+    "id": "scratch-whole-instruction",
+    "input": "Add multiplayer support. Scratch that. Make it single-player with AI bots.",
+    "required": [
+      "single-player",
+      "AI bots"
+    ],
+    "forbidden": [
+      "multiplayer",
+      "scratch",
+      "do not",
+      "don't",
+      "plan",
+      "please",
+      "instead"
+    ],
+    "expected_example": "Make the game single-player with AI bots."
+  },
+  {
+    "id": "scratch-partial-instruction",
+    "input": "Add shadows, reflections, and better lighting. Scratch reflections, use ambient occlusion instead.",
+    "required": [
+      "shadow",
+      "ambient occlusion",
+      "lighting"
+    ],
+    "forbidden": [
+      "reflection",
+      "scratch",
+      "do not",
+      "don't",
+      "plan",
+      "please",
+      "instead"
+    ],
+    "expected_example": "- Add shadows.\n- Add ambient occlusion.\n- Improve lighting."
+  },
+  {
+    "id": "no-invented-pr-restrictions",
+    "input": "Fix the player movement and create a pull request.",
+    "required": [
+      "movement",
+      "pull request"
+    ],
+    "forbidden": [
+      "please",
+      "do not",
+      "don't",
+      "merge",
+      "yet",
+      "plan",
+      "first"
+    ],
+    "expected_example": "Fix the player movement and create a pull request."
+  }
+]
