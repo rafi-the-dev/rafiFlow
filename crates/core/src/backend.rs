@@ -302,6 +302,10 @@ impl CleanupBackend for Llama {
                 json!({"role":"assistant","content":"1. Save the document.\n2. Close the dialog.\n3. Open the dashboard."}),
                 json!({"role":"user","content":serde_json::to_string(&json!({"dictation":"Add caching, metrics, and tracing. Scratch metrics, use logging instead."}))?}),
                 json!({"role":"assistant","content":"- Add caching.\n- Add logging.\n- Add tracing."}),
+                json!({"role":"user","content":serde_json::to_string(&json!({"dictation":"Okay, we tried the new renderer. The team liked it. Can I show you the results? I prefer Vulkan because first, it gives explicit control, second, it runs on Linux."}))?}),
+                json!({"role":"assistant","content":"We tried the new renderer, and the team liked it.\n\nCan I show you the results?\n\nI prefer Vulkan because:\n\n1. It gives explicit control.\n2. It runs on Linux."}),
+                json!({"role":"user","content":serde_json::to_string(&json!({"dictation":"Um, I worked on it yesterday. SignalDesk, it's going really well."}))?}),
+                json!({"role":"assistant","content":"I worked on SignalDesk yesterday, and it's going really well."}),
                 json!({"role":"user","content":serde_json::to_string(&json!({"dictation":"Change the local deployment guide, actually the global deployment guide. Do not change it yet, give me a plan. First review the commands, second show me proposed changes."}))?}),
                 json!({"role":"assistant","content":"Create a plan for updating the global deployment guide.\n\n1. Review the commands.\n2. Show the proposed changes.\n\nDo not change the guide yet."}),
             ]);

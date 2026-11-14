@@ -14,8 +14,7 @@
     "forbidden": [
       "do not",
       "don't",
-      "plan",
-      "please"
+      "plan"
     ],
     "expected_example": "1. Fix the player movement.\n2. Add jumping.\n3. Make the camera follow the player smoothly."
   },
@@ -38,7 +37,6 @@
       "actually",
       "do not",
       "don't",
-      "please",
       "instead"
     ],
     "expected_example": "I want four features:\n\n1. Add shadows.\n2. Add ambient occlusion.\n3. Add better lighting.\n4. Add a debug overlay."
@@ -54,7 +52,6 @@
       "notifications"
     ],
     "forbidden": [
-      "please",
       "do not modify",
       "plan first"
     ],
@@ -77,8 +74,7 @@
       "don't",
       "not modify",
       "yet",
-      "plan",
-      "please"
+      "plan"
     ],
     "expected_example": "Update the following files:\n\n- `AGENTS.md`: Update the build instructions.\n- `Cargo.toml`: Add the dependency.\n- `main.rs`: Initialize the new system."
   },
@@ -98,8 +94,7 @@
       "multiplayer",
       "matchmaking",
       "dedicated",
-      "scratch",
-      "please"
+      "scratch"
     ],
     "required_any": [
       "do not implement",
@@ -108,10 +103,9 @@
     "expected_example": "Make a plan to add single-player AI bots with improved enemy pathfinding and difficulty setting.\n\nDo not implement anything yet."
   },
   {
-    "id": "keep-please",
+    "id": "polite-request-content",
     "input": "Please fix the collision system and add some tests.",
     "required": [
-      "Please",
       "collision system",
       "tests"
     ],
@@ -124,14 +118,13 @@
     "expected_example": "Please fix the collision system and add tests."
   },
   {
-    "id": "do-not-add-please",
+    "id": "plain-request-content",
     "input": "Fix the collision system and add tests.",
     "required": [
       "collision system",
       "tests"
     ],
     "forbidden": [
-      "please",
       "do not",
       "don't",
       "plan",
@@ -152,7 +145,6 @@
       "do not",
       "don't",
       "plan",
-      "please",
       "instead"
     ],
     "expected_example": "Make the game single-player with AI bots."
@@ -171,7 +163,6 @@
       "do not",
       "don't",
       "plan",
-      "please",
       "instead"
     ],
     "expected_example": "- Add shadows.\n- Add ambient occlusion.\n- Improve lighting."
@@ -184,7 +175,6 @@
       "pull request"
     ],
     "forbidden": [
-      "please",
       "do not",
       "don't",
       "merge",
@@ -220,9 +210,55 @@
     ],
     "forbidden": [
       "do not",
-      "please",
-      "scratch"
+      "scratch",
+      "okay",
+      "so,"
     ],
-    "expected_example": "I worked on it a little. It's called Graphy Flow, and it's getting very good. I've run some tests. How about I give you a good test now?\n\nI use Linux because:\n\n1. It's faster.\n2. It's more customizable.\n3. It's free and open source.\n4. It has way less bloat.\n5. It's a lot more stable."
+    "expected_example": "I worked on it a little. It's called Graphy Flow, and it's getting very good. I've run some tests. How about I give you a good test now?\n\nI use Linux because:\n\n1. It's faster.\n2. It's more customizable.\n3. It's free and open source.\n4. It has way less bloat.\n5. It's a lot more stable.",
+    "must_change": true
+  },
+  {
+    "id": "short-awkward-update",
+    "input": "Okay, so I worked on it a little. RafiFlow, it's looking good.",
+    "required": [
+      "worked",
+      "a little",
+      "looking good",
+      "and"
+    ],
+    "forbidden": [
+      "okay",
+      "so,",
+      "RafiFlow,"
+    ],
+    "must_change": true,
+    "expected_example": "I've worked on rafiFlow a little, and it's looking good."
+  },
+  {
+    "id": "short-grammar-and-filler",
+    "input": "Um, I've ran the tests, uh, they all passes.",
+    "required": [
+      "tests",
+      "all",
+      "pass"
+    ],
+    "forbidden": [
+      "um",
+      "uh",
+      "i've ran",
+      "passes"
+    ],
+    "must_change": true,
+    "expected_example": "I've run the tests, and they all passed."
+  },
+  {
+    "id": "already-clean-statement",
+    "input": "The build passed.",
+    "required": [
+      "The build passed."
+    ],
+    "forbidden": [],
+    "expected_exact": "The build passed.",
+    "expected_example": "The build passed."
   }
 ]

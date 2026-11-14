@@ -379,3 +379,104 @@ How about I give you a good test now? I use Linux because:
 ```
 
 Run just this case: `cargo run -p rafiflow-core --example cleanup_regressions -- /tmp/context.json context-before-new-topic-list`. The content checks require every meaningful point, the question mark, paragraph separation, and all five numbered reasons. All eleven cases passed in independent fresh CUDA-backed Qwen processes after the change.
+
+## Mandatory active cleanup for short dictations
+
+Baseline: `3b24ff8`. Same selected Qwen GGUF, temperature zero, 24 CUDA layers, and a fresh local server for each case. All fourteen current cases pass after the change; the older nineteen model checks also pass. The rough-input checks explicitly reject unchanged output, while an already-clean statement is checked for exact preservation. The old politeness assertions were removed to match the user-requested removal of politeness rules; task content is still checked.
+
+`State::finish` has no short-input bypass. Only Raw mode skips cleanup. Cleanup errors are attached to the preserved raw transcript and return before automatic insertion. A unit regression verifies short, long, and clean Aggressive inputs all invoke the backend and consume its output. These tests verify specific examples, not universal fidelity of generated text.
+
+### context-before-new-topic-list
+
+Raw:
+
+```text
+Okay, so I worked on it a little. It's called Graphy Flow, it's getting very good. I've ran some tests. How about I'll give you a good test now? I will say I use Linux because first it is faster, second, it's more customizable. Third, it's free and open source. Fourth, it has way less bloat. Fifth, it's a lot more stable.
+```
+
+Before:
+
+```text
+I use Linux because:
+1. It is faster.
+2. It is more customizable.
+3. It is free and open source.
+4. It has way less bloat.
+5. It is a lot more stable.
+```
+
+After:
+
+```text
+I worked on it a little. It's called Graphy Flow, and it's getting very good. I've run some tests.
+
+How about I give you a good test now?
+
+I use Linux because:
+
+1. It is faster.
+2. It is more customizable.
+3. It is free and open source.
+4. It has way less bloat.
+5. It is a lot more stable.
+```
+
+### short-awkward-update
+
+Raw:
+
+```text
+Okay, so I worked on it a little. RafiFlow, it's looking good.
+```
+
+Before:
+
+```text
+Okay, so I worked on it a little. RafiFlow, it's looking good.
+```
+
+After:
+
+```text
+I worked on RafiFlow a little, and it's looking good.
+```
+
+### short-grammar-and-filler
+
+Raw:
+
+```text
+Um, I've ran the tests, uh, they all passes.
+```
+
+Before:
+
+```text
+I've run the tests; they all pass.
+```
+
+After:
+
+```text
+I ran the tests, and they all pass.
+```
+
+### already-clean-statement
+
+Raw:
+
+```text
+The build passed.
+```
+
+Before:
+
+```text
+The build passed.
+```
+
+After:
+
+```text
+The build passed.
+```
