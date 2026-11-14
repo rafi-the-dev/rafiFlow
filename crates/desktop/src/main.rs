@@ -45,20 +45,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let action = std::env::args()
                 .nth(2)
                 .ok_or("Expected start, stop, or cancel")?;
-            if !["start", "stop", "cancel"].contains(&action.as_str()) {
+            if !["start", "stop", "cancel", "show"].contains(&action.as_str()) {
                 return Err("Invalid command".into());
             }
-            let mut stream = UnixStream::connect(socket)?;
-            stream.set_read_timeout(Some(std::time::Duration::from_secs(420)))?;
-            stream.write_all(action.as_bytes())?;
-            stream.shutdown(std::net::Shutdown::Write)?;
-            let mut response = String::new();
-            stream.read_to_string(&mut response)?;
-            println!("{response}");
-            if !response.starts_with("OK") {
-                return Err(response.into());
-            }
-            return Ok(());
+            return send_control(&socket, &action, std::time::Duration::from_secs(420));
         }
     }
     let lock = std::fs::OpenOptions::new()
@@ -66,7 +56,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .truncate(false)
         .write(true)
         .open(dir.join("instance.lock"))?;
-    fs2::FileExt::try_lock_exclusive(&lock).map_err(|_| "rafiFlow is already running")?;
+    if let Err(error) = fs2::FileExt::try_lock_exclusive(&lock) {
+        if error.kind() != std::io::ErrorKind::WouldBlock {
+            return Err(error.into());
+        }
+        if std::env::args().any(|argument| argument == "--background") {
+            return Ok(());
+        }
+        return send_control(&socket, "show", std::time::Duration::from_secs(2));
+    }
     if socket.exists() {
         std::fs::remove_file(&socket)?;
     }
@@ -74,33 +72,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     rafiflow_core::platform::configure_overlay()?;
     let engine = Engine::start(dir)?;
     let control = engine.clone();
-    std::thread::spawn(move || {
-        for mut stream in listener.incoming().flatten() {
-            let engine = control.clone();
-            std::thread::spawn(move || {
-                let _ = stream.set_read_timeout(Some(std::time::Duration::from_secs(2)));
-                let mut input = String::new();
-                let result = (&mut stream)
-                    .take(32)
-                    .read_to_string(&mut input)
-                    .map_err(|e| e.to_string())
-                    .and_then(|_| {
-                        let action = match input.as_str() {
-                            "start" => Action::Start,
-                            "stop" => Action::Stop,
-                            "cancel" => Action::Cancel,
-                            _ => return Err("Invalid command".to_string()),
-                        };
-                        engine.action(action)
-                    });
-                let reply = match result {
-                    Ok(_) => "OK".into(),
-                    Err(e) => format!("ERROR {e}"),
-                };
-                let _ = stream.write_all(reply.as_bytes());
-            });
+    let mut context = tauri::generate_context!();
+    if std::env::args().any(|argument| argument == "--background") {
+        if let Some(window) = context
+            .config_mut()
+            .app
+            .windows
+            .iter_mut()
+            .find(|window| window.label == "main")
+        {
+            window.visible = false;
         }
-    });
+    }
     tauri::Builder::default()
         .manage(engine)
         .manage(Mutex::new(lock))
@@ -110,7 +93,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let _ = webview.eval(r#"window.addEventListener('error', e => window.__TAURI__.core.invoke('renderer_error',{message:String(e.message)}));window.addEventListener('unhandledrejection', e => window.__TAURI__.core.invoke('renderer_error',{message:String(e.reason)}));window.addEventListener('securitypolicyviolation', e => window.__TAURI__.core.invoke('renderer_error',{message:e.violatedDirective+': '+e.blockedURI}));"#);
             }
         })
-        .setup(|app| {
+        .setup(move |app| {
+            serve_control(listener, control, app.handle().clone());
             overlay::configure(app)?;
             let show =
                 tauri::menu::MenuItem::with_id(app, "show", "Open rafiFlow", true, None::<&str>)?;
@@ -146,10 +130,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 loop {
                     let engine = handle.state::<Engine>();
                     let phase = engine.status.lock().unwrap().phase.clone();
-                    let visible = matches!(
-                        phase.as_str(),
-                        "starting" | "recording" | "transcribing" | "cleaning"
-                    );
+                    let visible = phase == "recording";
                     if visible != shown {
                         if let Some(window) = handle.get_webview_window("overlay") {
                             let result = if visible {
@@ -171,7 +152,64 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             });
             Ok(())
         })
-        .run(tauri::generate_context!())?;
+        .run(context)?;
     let _ = std::fs::remove_file(socket);
     Ok(())
+}
+
+fn send_control(
+    socket: &std::path::Path,
+    action: &str,
+    timeout: std::time::Duration,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut stream = UnixStream::connect(socket)?;
+    stream.set_read_timeout(Some(timeout))?;
+    stream.write_all(action.as_bytes())?;
+    stream.shutdown(std::net::Shutdown::Write)?;
+    let mut response = String::new();
+    stream.read_to_string(&mut response)?;
+    if !response.starts_with("OK") {
+        return Err(response.into());
+    }
+    println!("{response}");
+    Ok(())
+}
+
+fn serve_control(listener: UnixListener, control: Engine, handle: tauri::AppHandle) {
+    std::thread::spawn(move || {
+        for mut stream in listener.incoming().flatten() {
+            let engine = control.clone();
+            let handle = handle.clone();
+            std::thread::spawn(move || {
+                let _ = stream.set_read_timeout(Some(std::time::Duration::from_secs(2)));
+                let mut input = String::new();
+                let result = (&mut stream)
+                    .take(32)
+                    .read_to_string(&mut input)
+                    .map_err(|e| e.to_string())
+                    .and_then(|_| {
+                        if input == "show" {
+                            let window = handle
+                                .get_webview_window("main")
+                                .ok_or("Main window unavailable")?;
+                            window.show().map_err(|e| e.to_string())?;
+                            window.set_focus().map_err(|e| e.to_string())?;
+                            return Ok(serde_json::json!({"ok":true}));
+                        }
+                        let action = match input.as_str() {
+                            "start" => Action::Start,
+                            "stop" => Action::Stop,
+                            "cancel" => Action::Cancel,
+                            _ => return Err("Invalid command".to_string()),
+                        };
+                        engine.action(action)
+                    });
+                let reply = match result {
+                    Ok(_) => "OK".into(),
+                    Err(e) => format!("ERROR {e}"),
+                };
+                let _ = stream.write_all(reply.as_bytes());
+            });
+        }
+    });
 }

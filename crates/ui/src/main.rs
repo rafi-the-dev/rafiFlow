@@ -167,11 +167,14 @@ fn app() -> Html {
         .unwrap_or_default()
         .contains("overlay");
     if overlay {
-        return html! {<div class={classes!("overlay", if phase=="recording" {"listening"} else {"working"})}>
+        if phase != "recording" {
+            return html! {<div class="overlay-page"/>};
+        }
+        return html! {<div class="overlay-page"><div class="overlay listening">
             <span class="record-dot"/><div class="wave" aria-hidden="true">
             {for (0..15).map(|i| html!{<i style={format!("--i:{i};--level:{}", status["level"].as_f64().unwrap_or(0.0))}/>})}
             </div><span>{s(status,"message")}</span>
-        </div>};
+        </div></div>};
     }
     let nav = |name: &'static str| {
         let page = page.clone();
@@ -232,8 +235,8 @@ fn app() -> Html {
         <main>
             <header><div><h1>{match page.as_str() {"settings"=>"Your flow", "cleanup"=>"From thought to text", _=>"Your words, collected"}}</h1><p class="muted">{"English dictation, entirely on your machine."}</p></div></header>
             <div class={classes!("status", (phase=="error").then_some("error"))} role="status">
-                <span class={classes!("status-dot", busy.then_some("pulse"))}/>
-                <div><strong>{s(status,"message")}</strong><small>{if status["models_loaded"]==true {"Models warm · unload after five idle minutes"} else {"Models load on first use"}}</small></div>
+                <span class={classes!("status-dot", (phase=="recording").then_some("pulse"))}/>
+                <div><strong>{if matches!(phase,"transcribing" | "cleaning") {"Recording finished"} else {s(status,"message")}}</strong><small>{if status["models_loaded"]==true {"Models warm · unload after five idle minutes"} else {"Models load on first use"}}</small></div>
                 {if phase=="recording" {html!{<><button onclick={stop}>{"Finish"}</button><button onclick={cancel}>{"Cancel"}</button></>}} else {html!{<button disabled={busy} onclick={start}>{"Record"}</button>}}}
             </div>
             {if !error.is_empty() {html!{<p class="error notice" role="alert">{(*error).clone()}</p>}} else {Html::default()}}
