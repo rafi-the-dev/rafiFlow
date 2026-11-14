@@ -66,7 +66,8 @@ pub fn insert(text: &str, target: &str, paste: bool) -> Result<()> {
             })
         });
         let (mods, key) = if terminal {
-            ("SHIFT", "Insert")
+            // Shift+Insert can paste PRIMARY selection instead of the clipboard we just set.
+            ("CTRL SHIFT", "V")
         } else {
             ("CTRL", "V")
         };

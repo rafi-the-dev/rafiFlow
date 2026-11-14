@@ -39,7 +39,7 @@ The supplied Cohere Q8_0 GGUF uses **CrispASR**, not PyTorch or llama.cpp. Qwen3
 
 Use `rafiflow --background` for login startup without opening the main window. An XDG autostart entry under `~/.config/autostart/` can run the installed executable with this argument. The main app-menu launcher should omit it so it opens the window when requested.
 
-For Hyprland versions using `.conf` configuration, use compositor press/release bindings that call the same `rafiflow --control start` and `rafiflow --control stop` commands. The supplied Lua file targets Omarchy's newer Lua setup. Pasting uses Hyprland’s native shortcut dispatcher, with Shift+Insert for windows tagged as terminals. Other desktops can use these commands with their own shortcut tools; safe automatic paste currently requires Hyprland. Disable automatic paste to use clipboard-only dictation elsewhere.
+For Hyprland versions using `.conf` configuration, use compositor press/release bindings that call the same `rafiflow --control start` and `rafiflow --control stop` commands. The supplied Lua file targets Omarchy's newer Lua setup. Pasting uses Hyprland’s native shortcut dispatcher, with Ctrl+Shift+V for windows tagged as terminals. Other desktops can use these commands with their own shortcut tools; safe automatic paste currently requires Hyprland. Disable automatic paste to use clipboard-only dictation elsewhere.
 
 The in-app Record button is useful for testing. Use the global shortcut with the receiving app focused for normal dictation. Clipboard copying replaces the current clipboard and does not restore it.
 

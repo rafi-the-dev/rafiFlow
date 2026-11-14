@@ -2,11 +2,10 @@
 use rafiflow_core::platform;
 fn main() -> anyhow::Result<()> {
     if let Some(target) = std::env::args().nth(1) {
-        platform::insert(
-            "rafiFlow paste test: AGENTS.md, 1536, 300 seconds.",
-            &target,
-            true,
-        )?;
+        let text = std::env::args()
+            .nth(2)
+            .unwrap_or_else(|| "rafiFlow paste test: AGENTS.md, 1536, 300 seconds.".into());
+        platform::insert(&text, &target, true)?;
         println!("Paste command completed for the supplied focused test window.");
     } else {
         let path = std::env::temp_dir().join(format!("rafiflow-{}.wav", uuid::Uuid::new_v4()));
