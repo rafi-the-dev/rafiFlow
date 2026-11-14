@@ -127,6 +127,9 @@ impl Engine {
             .map_err(|_| "Command queue is busy".to_string())?;
         if reserving {
             status.phase = "starting".into();
+        } else if stopping && matches!(status.phase.as_str(), "recording" | "starting") {
+            // Hide the recording overlay as soon as release is queued, before WAV finalization.
+            status.phase = "transcribing".into();
         }
         drop(status);
         rx.recv_timeout(Duration::from_secs(420))
@@ -179,8 +182,8 @@ impl State {
             }
             Action::Stop => {
                 if let Some(recording) = self.recording.take() {
-                    let target = recording.stop()?;
                     self.set("transcribing", "Transcribing on your device");
+                    let target = recording.stop()?;
                     let result = self.transcribe();
                     self.touched = Instant::now();
                     let _ = std::fs::remove_file(self.dir.join("recording.wav"));
@@ -339,6 +342,26 @@ mod tests {
             "um actually no"
         );
         std::fs::remove_dir_all(state.dir).unwrap();
+    }
+    #[test]
+    fn release_leaves_recording_phase_before_worker_finishes() {
+        let (tx, rx) = mpsc::sync_channel::<Request>(1);
+        let status = Arc::new(Mutex::new(Status {
+            phase: "recording".into(),
+            ..Status::default()
+        }));
+        let engine = Engine {
+            tx,
+            status: status.clone(),
+            dir: PathBuf::new(),
+        };
+        let worker = std::thread::spawn(move || {
+            let request = rx.recv().unwrap();
+            assert_ne!(status.lock().unwrap().phase, "recording");
+            request.reply.send(Ok(json!({"ok":true}))).unwrap();
+        });
+        engine.action(Action::Stop).unwrap();
+        worker.join().unwrap();
     }
     #[test]
     fn models_stay_warm_until_five_minutes() {

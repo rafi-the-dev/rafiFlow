@@ -34,7 +34,10 @@ The supplied Cohere Q8_0 GGUF uses **CrispASR**, not PyTorch or llama.cpp. Qwen3
 2. On Hyprland 0.55+, rafiFlow installs a runtime rule for its own recording window. The helper also installs this rule on configuration reload, keeping the overlay borderless. Copy the supplied `scripts/rafiflow-hyprland.lua` somewhere stable and include it from your Omarchy `~/.config/hypr/hyprland.lua`. Check for conflicting Ctrl + Alt + Space bindings first. Validate changes with `hyprctl reload` and `hyprctl configerrors`.
 3. Focus a text field in another app. Hold **Ctrl + Alt + Space**, speak, then release Space. The helper tracks the press and catches release even if Ctrl or Alt is released first. Ordinary Space releases do not send recording commands.
 4. Keep the target window focused. If focus changes, rafiFlow copies the result but skips paste. History retains both the raw and edited text.
-5. Closing the main window keeps rafiFlow running. Open it or quit from its tray menu.
+5. The overlay disappears on release. Transcription and cleanup continue silently, and the finished text is inserted when ready.
+6. Closing the main window keeps rafiFlow running. Open it or quit from its tray menu. Launching rafiFlow again opens the existing instance.
+
+Use `rafiflow --background` for login startup without opening the main window. An XDG autostart entry under `~/.config/autostart/` can run the installed executable with this argument. The main app-menu launcher should omit it so it opens the window when requested.
 
 For Hyprland versions using `.conf` configuration, use compositor press/release bindings that call the same `rafiflow --control start` and `rafiflow --control stop` commands. The supplied Lua file targets Omarchy's newer Lua setup. Pasting uses Hyprland’s native shortcut dispatcher, with Shift+Insert for windows tagged as terminals. Other desktops can use these commands with their own shortcut tools; safe automatic paste currently requires Hyprland. Disable automatic paste to use clipboard-only dictation elsewhere.
 
