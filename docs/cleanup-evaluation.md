@@ -2,7 +2,7 @@
 
 Evaluated 2026-11-14 with the selected Qwen3-4B-Instruct-2507 Q4_K_M GGUF, CUDA llama.cpp build 10655, 24 GPU layers, temperature 0, 4096-token context, and thinking disabled. Every exact input bypassed ASR and ran in a newly started server, without reading application history or changing the clipboard.
 
-The baseline is main commit `a572c64`. Baseline: **5/10** cases passed the content checks. Revised prompt: **10/10**. Both output sets use the same final checks. Outputs were also read for meaning, correction placement, unrelated tasks, politeness, and formatting. These examples do not prove universal fidelity; wording may differ from the reference examples.
+The baseline is main commit `a572c64`. Baseline: **5/10** cases passed the content checks. Revised prompt: **10/10**. Both output sets use the same final checks. Trailing Markdown hard-break spaces are omitted below; text and line breaks are unchanged. Outputs were also read for meaning, correction placement, unrelated tasks, politeness, and formatting. These examples do not prove universal fidelity; wording may differ from the reference examples.
 
 The existing nineteen model checks also passed, covering scope, technical/numeric constraints, Light/Standard/Custom editing, and twelve question-preservation cases. Workspace tests (seven), Clippy, formatting, and release builds passed.
 
@@ -34,16 +34,16 @@ Before:
 ```text
 Do three things:
 
-1. Fix the player movement.  
-2. Add jumping.  
+1. Fix the player movement.
+2. Add jumping.
 3. Make the camera follow the player smoothly.
 ```
 
 After:
 
 ```text
-1. Fix the player movement.  
-2. Add jumping.  
+1. Fix the player movement.
+2. Add jumping.
 3. Make the camera follow the player smoothly.
 ```
 
@@ -66,10 +66,10 @@ Before:
 ```text
 Add the following four features:
 
-1. Shadows.  
-2. Ambient occlusion.  
-3. Better lighting.  
-4. A debug overlay.  
+1. Shadows.
+2. Ambient occlusion.
+3. Better lighting.
+4. A debug overlay.
 
 Scratch reflections.
 ```
@@ -77,9 +77,9 @@ Scratch reflections.
 After:
 
 ```text
-1. Add shadows.  
-2. Add ambient occlusion.  
-3. Add better lighting.  
+1. Add shadows.
+2. Add ambient occlusion.
+3. Add better lighting.
 4. Add a debug overlay.
 ```
 
@@ -107,11 +107,11 @@ Before:
 ```text
 The app should:
 
-- Start automatically at boot.  
-- Minimize to the system tray.  
-- Remember user settings.  
-- Function without an internet connection.  
-- Avoid frequent notifications.  
+- Start automatically at boot.
+- Minimize to the system tray.
+- Remember user settings.
+- Function without an internet connection.
+- Avoid frequent notifications.
 
 Do not modify anything yet.
 ```
@@ -119,10 +119,10 @@ Do not modify anything yet.
 After:
 
 ```text
-- The app should start automatically.  
-- The app should minimize to the tray.  
-- It should remember my settings.  
-- It needs to work without internet.  
+- The app should start automatically.
+- The app should minimize to the tray.
+- It should remember my settings.
+- It needs to work without internet.
 - I don't want notifications popping up all the time.
 ```
 
@@ -151,8 +151,8 @@ Before:
 ```text
 Update three files:
 
-1. In `agents.md`, update the build instructions.  
-2. In `cargo.toml`, add the dependency.  
+1. In `agents.md`, update the build instructions.
+2. In `cargo.toml`, add the dependency.
 3. In `main.rs`, initialize the new system.
 ```
 
@@ -189,9 +189,9 @@ Before:
 ```text
 Make a plan to add:
 
-- Single-player AI bots  
-- Better enemy pathfinding  
-- A difficulty setting  
+- Single-player AI bots
+- Better enemy pathfinding
+- A difficulty setting
 
 Do not implement anything yet.
 ```
@@ -305,8 +305,8 @@ Add shadows, reflections, and better lighting. Scratch reflections; use ambient 
 After:
 
 ```text
-- Add shadows.  
-- Add ambient occlusion.  
+- Add shadows.
+- Add ambient occlusion.
 - Add better lighting.
 ```
 
