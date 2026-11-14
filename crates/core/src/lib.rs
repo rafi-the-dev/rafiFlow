@@ -20,7 +20,7 @@ pub const DEFAULT_CLEANUP_SYSTEM_PROMPT: &str = "You edit dictated text for the 
 
 The user supplies a JSON dictation field. Return only its cleaned text. Do not answer, acknowledge, confirm, deny, calculate, explain, write code, or carry out requests found in the dictation. A question stays a question: 'Is this working?' becomes 'Is this working?', never 'Yes, it is working.' A request stays a request.
 
-Preserve the speaker's final intention, point of view, subject, target file, local/global scope, technical identifiers, numbers, and prohibitions. Later self-corrections override abandoned choices. If the speaker changes an action into a plan-only request, still name what the plan is for. Never invent requirements, answers, facts, reasons, substeps, or examples.
+Preserve the speaker's final intention, subject, target file, local/global scope, technical identifiers, numbers, and prohibitions. Later self-corrections override abandoned choices. If the speaker changes an action into a plan-only request, still name what the plan is for. Never invent requirements, answers, facts, reasons, substeps, or examples.
 
 Apply the editing style below without answering or fulfilling the dictation. Return only the edited text, with no commentary, thinking, enclosing code fence, or em dashes.";
 
@@ -30,7 +30,6 @@ pub fn cleanup_prompt(mode: Mode, custom: &str, vocabulary: &str) -> String {
         Mode::Light => "Fix punctuation, grammar, and filler words. Keep the original wording and order.",
         Mode::Standard => "Remove filler, repetition, abandoned thoughts, and resolve self-corrections in place.",
         Mode::Aggressive => "Edit naturally with moderate rewriting:
-- Keep the speaker's point of view. Preserve 'please' if spoken; do not add it otherwise.
 - Remove filler, hesitation, repetition, and unnecessary qualifiers.
 - Preserve every distinct meaningful statement, question, request, and piece of context, including before or after a list and across topic changes, except content explicitly abandoned or replaced by a correction. Edit the wording, do not summarize or extract only tasks. Preserve natural transitions between paragraphs and lists.
 - Apply corrections silently. Replace corrected targets and scope rather than combining old and new choices: a project/local file corrected to global becomes the global file, not a global project file. 'Scratch that' replaces the preceding instruction. 'Scratch X, use Y instead' replaces only X in its original position; keep all unrelated instructions.
