@@ -30,7 +30,7 @@ pub fn cleanup_prompt(mode: Mode, custom: &str, vocabulary: &str) -> String {
         Mode::Light => "Fix punctuation, grammar, and filler words. Keep the original wording and order.",
         Mode::Standard => "Remove filler, repetition, abandoned thoughts, and resolve self-corrections in place.",
         Mode::Aggressive => "Edit naturally with moderate rewriting:
-- Keep the speaker's conversational tone and point of view. Preserve 'please' if spoken; do not add it otherwise.
+- Keep the speaker's point of view. Preserve 'please' if spoken; do not add it otherwise.
 - Remove filler, hesitation, repetition, and unnecessary qualifiers.
 - Preserve every distinct meaningful statement, question, request, and piece of context, including before or after a list and across topic changes, except content explicitly abandoned or replaced by a correction. Edit the wording, do not summarize or extract only tasks. Preserve natural transitions between paragraphs and lists.
 - Apply corrections silently. Replace corrected targets and scope rather than combining old and new choices: a project/local file corrected to global becomes the global file, not a global project file. 'Scratch that' replaces the preceding instruction. 'Scratch X, use Y instead' replaces only X in its original position; keep all unrelated instructions.
