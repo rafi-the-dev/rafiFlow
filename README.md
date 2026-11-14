@@ -48,7 +48,7 @@ The in-app Record button is useful for testing. Use the global shortcut with the
 - Raw bypasses Qwen entirely.
 - Light fixes grammar, punctuation, and filler.
 - Standard also resolves corrections and repetition.
-- Aggressive is the default: moderate rewriting that preserves meaning, applies corrections in place, and formats paragraphs and Markdown lists. It should retain explicit restrictions without inventing new ones.
+- Aggressive is the default: mandatory editing of filler, grammar, and awkward phrasing even for short dictations; already-clean text may remain unchanged. It uses moderate rewriting that preserves meaning, applies corrections in place, and formats paragraphs and Markdown lists. It should retain explicit restrictions without inventing new ones.
 - Custom uses your own editing instructions.
 
 Every AI cleanup mode uses a built-in editing system prompt. Dictated questions stay questions, and dictated requests are edited rather than answered or executed. Custom instructions change editing style within that role. Use Cleanup studio to compare results under different settings. Vocabulary hints guide cleanup, but do not fine-tune ASR or guarantee spelling. Model output can still make mistakes; compare the original transcript in history.
@@ -81,6 +81,6 @@ cargo run -p rafiflow-core --example evaluate -- /path/to/mono-16khz-s16.wav
 
 Stop rafiFlow or wait for its models to unload before running the GPU evaluator, to avoid loading duplicate copies on an 8 GB GPU.
 
-The cleanup regression evaluator uses the eleven exact user-supplied raw dictations with a fresh Qwen server per case, bypassing ASR and isolating prompt caches. It writes every output and content-check failure to JSON, then fails if any check failed. Inspect the outputs too: token assertions cannot establish semantic fidelity.
+The cleanup regression evaluator uses the fourteen exact user-supplied raw dictations with a fresh Qwen server per case, bypassing ASR and isolating prompt caches. It writes every output and content-check failure to JSON, then fails if any check failed. Inspect the outputs too: token assertions cannot establish semantic fidelity.
 
 The evaluator invokes real local models, logs the raw and cleaned results, and checks correction, formatting, and technical constraints. It never copies or pastes. See the technical reference in AGENTS.md for verified outcomes and remaining limitations.

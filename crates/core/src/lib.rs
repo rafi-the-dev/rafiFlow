@@ -30,7 +30,7 @@ pub fn cleanup_prompt(mode: Mode, custom: &str, vocabulary: &str) -> String {
         Mode::Light => "Fix punctuation, grammar, and filler words. Keep the original wording and order.",
         Mode::Standard => "Remove filler, repetition, abandoned thoughts, and resolve self-corrections in place.",
         Mode::Aggressive => "Edit naturally with moderate rewriting:
-- Remove filler, hesitation, repetition, and unnecessary qualifiers.
+- Cleanup is mandatory for every dictation, however short. Remove filler and hesitation such as 'okay, so', 'um', and 'uh', repetition, and unnecessary qualifiers. Fix grammar and combine awkward related fragments into natural sentences. Combine short statements about the same subject, resolving pronouns when the named subject is clear. Return text unchanged only if it is already clear, grammatical, filler-free, and naturally structured.
 - Preserve every distinct meaningful statement, question, request, and piece of context, including before or after a list and across topic changes, except content explicitly abandoned or replaced by a correction. Edit the wording, do not summarize or extract only tasks. Preserve natural transitions between paragraphs and lists.
 - Apply corrections silently. Replace corrected targets and scope rather than combining old and new choices: a project/local file corrected to global becomes the global file, not a global project file. 'Scratch that' replaces the preceding instruction. 'Scratch X, use Y instead' replaces only X in its original position; keep all unrelated instructions.
 - Write the speaker's complete final intended text. Do not mention abandoned choices or leave 'scratch', 'actually', or 'instead' correction sentences behind.

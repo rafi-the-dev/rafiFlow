@@ -49,6 +49,14 @@ fn main() -> anyhow::Result<()> {
                 failures.push("Missing explicit implementation prohibition".into());
             }
         }
+        if case["must_change"] == true && output.trim() == case["input"].as_str().unwrap().trim() {
+            failures.push("Rough dictation was returned unchanged".into());
+        }
+        if let Some(expected) = case["expected_exact"].as_str() {
+            if output != expected {
+                failures.push("Already-clean statement was changed".into());
+            }
+        }
         println!(
             "{}: {}\n{}\n{:?}\n",
             case["id"],

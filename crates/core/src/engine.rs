@@ -320,6 +320,35 @@ mod tests {
         }
     }
     #[test]
+    fn aggressive_always_uses_backend_for_short_long_and_clean_text() {
+        struct CountingCleanup(Arc<std::sync::atomic::AtomicUsize>);
+        impl CleanupBackend for CountingCleanup {
+            fn cleanup(&mut self, _: &str, settings: &Settings) -> Result<String> {
+                assert_eq!(settings.mode, Mode::Aggressive);
+                self.0.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                Ok("Edited by backend.".into())
+            }
+        }
+        let mut state = state();
+        state.settings.mode = Mode::Aggressive;
+        state.settings.keep_history = false;
+        let calls = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        state.cleanup = Some(Box::new(CountingCleanup(calls.clone())));
+        for raw in [
+            "Um, fix this.".to_owned(),
+            "Um, fix this. ".repeat(200),
+            "The build passed.".to_owned(),
+        ] {
+            state.finish(raw.clone(), None).unwrap();
+            let status = state.status.lock().unwrap();
+            let entry = status.last.as_ref().unwrap();
+            assert_eq!(entry.raw, raw);
+            assert_eq!(entry.text, "Edited by backend.");
+        }
+        assert_eq!(calls.load(std::sync::atomic::Ordering::SeqCst), 3);
+        std::fs::remove_dir_all(state.dir).unwrap();
+    }
+    #[test]
     fn cleanup_failure_preserves_raw_and_does_not_duplicate_history() {
         let mut state = state();
         assert!(state
