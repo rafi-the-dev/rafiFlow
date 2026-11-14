@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "rafiFlow",
+  "version": "0.1.0",
+  "identifier": "dev.rafi.rafiflow",
+  "build": {
+    "frontendDist": "../../dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "rafiFlow",
+        "width": 1000,
+        "height": 760,
+        "minWidth": 760,
+        "minHeight": 600
+      },
+      {
+        "label": "overlay",
+        "title": "rafiFlow recording",
+        "url": "index.html?overlay",
+        "width": 340,
+        "height": 90,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "focus": false,
+        "focusable": false,
+        "skipTaskbar": true,
+        "visible": false,
+        "resizable": false,
+        "minWidth": 340,
+        "maxWidth": 340,
+        "minHeight": 90,
+        "maxHeight": 90
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src tauri://localhost http://tauri.localhost ipc: http://ipc.localhost; img-src 'self' data:"
+    }
+  },
+  "bundle": {
+    "active": false
+  }
+}
