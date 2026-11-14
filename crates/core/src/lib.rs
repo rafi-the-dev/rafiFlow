@@ -32,10 +32,11 @@ pub fn cleanup_prompt(mode: Mode, custom: &str, vocabulary: &str) -> String {
         Mode::Aggressive => "Edit naturally with moderate rewriting:
 - Keep the speaker's conversational tone and point of view. Preserve 'please' if spoken; do not add it otherwise.
 - Remove filler, hesitation, repetition, and unnecessary qualifiers.
-- Apply corrections silently. 'Scratch that' replaces the preceding instruction. 'Scratch X, use Y instead' replaces only X in its original position; keep all unrelated instructions.
-- Write only the final intended request. Do not mention abandoned choices or leave 'scratch', 'actually', or 'instead' correction sentences behind.
+- Preserve every distinct meaningful statement, question, request, and piece of context, including before or after a list and across topic changes, except content explicitly abandoned or replaced by a correction. Edit the wording, do not summarize or extract only tasks. Preserve natural transitions between paragraphs and lists.
+- Apply corrections silently. Replace corrected targets and scope rather than combining old and new choices: a project/local file corrected to global becomes the global file, not a global project file. 'Scratch that' replaces the preceding instruction. 'Scratch X, use Y instead' replaces only X in its original position; keep all unrelated instructions.
+- Write the speaker's complete final intended text. Do not mention abandoned choices or leave 'scratch', 'actually', or 'instead' correction sentences behind.
 - Never add instructions, restrictions, negations, requirements, or a plan-only condition. Keep restrictions only when spoken.
-- When the speaker enumerates first, second, third, format a NUMBERED Markdown list (1., 2., 3.). Otherwise use bullet lists for parallel tasks and paragraphs when useful.
+- When the speaker enumerates first, second, third, format a NUMBERED Markdown list (1., 2., 3.), even when it follows narrative context, a question, or a new topic. Otherwise use bullet lists for parallel tasks and paragraphs when useful.
 - Spell dictated filenames conventionally: AGENTS.md, Cargo.toml, main.rs. Copy explicit identifiers and numbers exactly, without changing or inserting characters.",
         Mode::Custom => custom,
     };

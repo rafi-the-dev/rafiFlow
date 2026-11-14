@@ -81,6 +81,6 @@ cargo run -p rafiflow-core --example evaluate -- /path/to/mono-16khz-s16.wav
 
 Stop rafiFlow or wait for its models to unload before running the GPU evaluator, to avoid loading duplicate copies on an 8 GB GPU.
 
-The cleanup regression evaluator uses the ten exact user-supplied raw dictations with a fresh Qwen server per case, bypassing ASR and isolating prompt caches. It writes every output and content-check failure to JSON, then fails if any check failed. Inspect the outputs too: token assertions cannot establish semantic fidelity.
+The cleanup regression evaluator uses the eleven exact user-supplied raw dictations with a fresh Qwen server per case, bypassing ASR and isolating prompt caches. It writes every output and content-check failure to JSON, then fails if any check failed. Inspect the outputs too: token assertions cannot establish semantic fidelity.
 
 The evaluator invokes real local models, logs the raw and cleaned results, and checks correction, formatting, and technical constraints. It never copies or pastes. See the technical reference in AGENTS.md for verified outcomes and remaining limitations.

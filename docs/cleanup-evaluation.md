@@ -345,3 +345,37 @@ Fix the player movement and create a pull request.
 ```
 
 The baseline reproduced the trailing scratch sentence and removal of “please.” It added an unspoken restriction in the app-settings case; the file-update case reproduced lowercase filenames but did not append the restriction in this independent run. The revised output keeps “some tests,” a harmless wording difference from the reference. No heuristic correction post-processing or inference-setting changes were added.
+
+## Context before a new-topic list regression
+
+The eleven-case suite now includes the exact Graphy Flow/Linux dictation. The baseline reproduced the missing introductory context. A focused Aggressive prompt change preserves statements, questions, and transitions while retaining numbered enumeration after narrative context. No examples, model settings, or correction post-processing changed.
+
+Raw input:
+
+> Okay, so I worked on it a little. It's called Graphy Flow, it's getting very good. I've ran some tests. How about I'll give you a good test now? I will say I use Linux because first it is faster, second, it's more customizable. Third, it's free and open source. Fourth, it has way less bloat. Fifth, it's a lot more stable.
+
+Before:
+
+```text
+I use Linux because:
+- It is faster.
+- It is more customizable.
+- It is free and open source.
+- It has way less bloat.
+- It is a lot more stable.
+```
+
+After:
+
+```text
+Okay, so I worked on it a little. It's called Graphy Flow, and it's getting very good. I've run some tests.
+
+How about I give you a good test now? I use Linux because:
+1. It is faster.
+2. It's more customizable.
+3. It's free and open source.
+4. It has way less bloat.
+5. It's a lot more stable.
+```
+
+Run just this case: `cargo run -p rafiflow-core --example cleanup_regressions -- /tmp/context.json context-before-new-topic-list`. The content checks require every meaningful point, the question mark, paragraph separation, and all five numbered reasons. All eleven cases passed in independent fresh CUDA-backed Qwen processes after the change.
